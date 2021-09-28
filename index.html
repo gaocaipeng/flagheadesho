@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,maximum-scale=1.0,minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>国庆红旗头像一键生成</title>
+  <link rel="shortcut icon" href="https://www.gaocaipeng.com/assets/img/logo-circul.png" type="image/x-icon">
+  <style>
+    a:link {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    a:visited {
+      color: #fff;
+    }
+
+    #export {
+      display: none;
+      margin: 0 auto;
+      width: 250px;
+      height: 250px;
+      margin-top: 50px;
+      margin-bottom: 50px
+    }
+
+    .operation-btns .o-btn1 {
+      background-size: 11.6rem 4.325rem
+    }
+
+    .operation-btns .o-btn2 {
+      background-size: 11.6rem 3.75rem
+    }
+
+    .footer {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .footer-top {
+      width: 100;
+      font-size: 1.2rem;
+      color: #fff;
+      display: flex;
+      padding: 0 1.8rem;
+      box-sizing: border-box;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer span {
+      display: block;
+      min-width: 4rem;
+      font-weight: bold;
+    }
+
+    .footer p {
+      flex: 1;
+      font-size: 1rem;
+    }
+
+    .footer button {
+      background: #fade53;
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbe88e', endColorstr='#fade53');
+      border: none;
+      border-radius: 1rem;
+      color: white;
+      width: 10rem;
+      height: 3rem;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="css/strap.min.css">
+</head>
+
+<body>
+  <div class="wrapper">
+    <img src="" alt="" class="img-load" style="width: 9.5rem; position: fixed; top: 0px; left: -9999px;">
+    <div class="operation-header">
+      <div class="h-title">
+
+      </div>
+    </div>
+    <div class="operation-box">
+      <a class="prev" onclick="changeHat(1)"></a>
+      <div class="operation-img">
+        <div class="cropper-content" id="content">
+          <canvas class="" id="cvs"></canvas>
+        </div>
+      </div>
+      <a class="next" onclick="changeHat(2)"></a>
+    </div>
+    <img id="export" alt="国庆专属头像" src="">
+    <div class="operation-btns">
+      <a class="o-btn1">
+        <input class="o-btn1" id="upload" type="file" onchange="viewer()" style="opacity: 0;">
+      </a>
+      <a class="o-btn2" onclick="exportFunc()" style="display: none;">
+      </a>
+    </div>
+
+    <div class="operation-done">
+      <img src="img/163275557236523584.png" class="act-done-happy">
+    </div>
+
+    <div class="footer">
+      <div class="footer-top">
+        <span>建议：</span>
+        <p>使用微信头像生成国庆头像，不是正方形照片会导致变形哦！</p>
+      </div>
+      <button><a href="https://www.gaocaipeng.com">我的主页</a></button>
+    </div>
+  </div>
+  <div style="display: none">
+    <img id="img" src="" alt="">
+    <img class="hide" id="hat0" src="img/hat0.png">
+    <img class="hide" id="hat1" src="img/hat1.png">
+    <img class="hide" id="hat2" src="img/hat2.png">
+    <img class="hide" id="hat3" src="img/hat3.png">
+    <img class="hide" id="hat4" src="img/hat4.png">
+    <img class="hide" id="hat5" src="img/hat5.png">
+    <img class="hide" id="hat6" src="img/hat6.png">
+    <img class="hide" id="hat7" src="img/hat7.png">
+    <img class="hide" id="hat8" src="img/hat8.png">
+    <img class="hide" id="hat9" src="img/hat9.png">
+    <img class="hide" id="hat10" src="img/hat10.png">
+    <img class="hide" id="hat11" src="img/hat11.png">
+    <img class="hide" id="hat12" src="img/hat12.png">
+    <img class="hide" id="hat13" src="img/hat13.png">
+    <img class="hide" id="hat14" src="img/hat14.png">
+    <img class="hide" id="hat15" src="img/hat15.png">
+    <img class="hide" id="hat16" src="img/hat16.png">
+    <img class="hide" id="hat17" src="img/hat17.png">
+    <img class="hide" id="hat18" src="img/hat18.png">
+    <img class="hide" id="hat19" src="img/hat19.png">
+    <img class="hide" id="hat20" src="img/hat20.png">
+    <img class="hide" id="hat21" src="img/hat21.png">
+    <img class="hide" id="hat22" src="img/hat22.png">
+    <img class="hide" id="hat23" src="img/hat23.png">
+  </div>
+  <script src="js/fabric.min.js"></script>
+  <script>
+    var cvs = document.getElementById("cvs");
+    var ctx = cvs.getContext("2d");
+    var exportImage = document.getElementById("export");
+    var img = document.getElementById("img");
+    var hat = "hat0";
+    var canvasFabric;
+    var hatInstance;
+    //var screenWidth = window.screen.width < 500 ? window.screen.width : 300;
+    var screenWidth = document.getElementById("content").scrollHeight;
+    function viewer() {
+      var file = document.getElementById("upload").files[0];
+      console.log(file);
+      var reader = new FileReader;
+      if (file) {
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+          img.src = reader.result;
+          img.onload = function () {
+            img2Cvs(img)
+          }
+        }
+      } else {
+        img.src = ""
+      }
+    }
+    function img2Cvs(img) {
+      cvs.width = img.width;
+      cvs.height = img.height;
+      cvs.style.display = "block";
+      canvasFabric = new fabric.Canvas("cvs", {
+        width: screenWidth,
+        height: screenWidth,
+        backgroundImage: new fabric.Image(img, {
+          scaleX: screenWidth / img.width,
+          scaleY: screenWidth / img.height
+        })
+      });
+      changeHat(0);
+
+      document.getElementsByClassName("o-btn1")[0].style.display = "none";
+      document.getElementsByClassName("o-btn2")[0].style.display = "block";
+      //document.getElementById("tip").style.opacity = 1
+    }
+    function changeHat(type) {
+      var file = document.getElementById("upload").files[0];
+      if (file) {
+        document.getElementById(hat).style.display = "none";
+        var hats = document.getElementsByClassName("hide");
+        var hatsnum = +hat.replace("hat", "")
+        if (!type) {
+          hat = "hat0"
+        } else if (type === 1) {
+          hat = "hat" + (hatsnum ? hatsnum - 1 : hats.length - 1);
+        } else if (type === 2) {
+          hat = "hat" + (hatsnum + 1) % hats.length;
+        }
+        console.log(hat)
+        var hatImage = document.getElementById(hat);
+        hatImage.style.display = "block";
+        if (hatInstance) {
+          canvasFabric.remove(hatInstance)
+        }
+        // console.log(hatImage.width);
+        // console.log(100 / hatImage.width);
+        hatInstance = new fabric.Image(hatImage, {
+          top: 0,
+          left: 0,
+          scaleX: screenWidth / hatImage.width,
+          scaleY: screenWidth / hatImage.height,
+          cornerColor: "#0b3a42",
+          cornerStrokeColor: "#fff",
+          cornerStyle: "circle",
+          transparentCorners: false,
+          rotatingPointOffset: 30
+        });
+        hatInstance.setControlVisible("bl", false);
+        hatInstance.setControlVisible("tr", false);
+        hatInstance.setControlVisible("tl", false);
+        hatInstance.setControlVisible("mr", false);
+        hatInstance.setControlVisible("mt", false);
+        canvasFabric.add(hatInstance)
+      }
+    }
+    function exportFunc() {
+      document.getElementsByClassName("operation-box")[0].style.display = "none";
+      document.getElementsByClassName("operation-btns")[0].style.display = "none";
+      /*document.getElementById("exportBtn").style.display = "none";
+      document.getElementById("tip").innerHTML = "长按图片保存或分享";
+      document.getElementById("change").style.display = "none";*/
+      cvs.style.display = "none";
+      exportImage.style.display = "block";
+      exportImage.src = canvasFabric.toDataURL({
+        width: screenWidth,
+        height: screenWidth
+      });
+      alert('长按图片保存或分享');
+    }
+  </script>
+  <div style="display:none;">
+    <script type="text/javascript" src="https://s4.cnzz.com/z_stat.php?id=1279954851&amp;web_id=1279954851"></script>
+  </div>
+</body>
+
+</html>
